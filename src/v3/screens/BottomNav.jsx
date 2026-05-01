@@ -1,4 +1,4 @@
-import { Icon } from '../Icon.jsx'
+import { Icon } from '../../Icon.jsx'
 
 export function BottomNav({ tab, onChange }) {
   return (
@@ -7,15 +7,15 @@ export function BottomNav({ tab, onChange }) {
         className={tab === 'home' ? 'active' : ''}
         onClick={() => onChange('home')}
       >
-        <Icon name="home" size={22} className="nav-ico" />
-        Home
+        <Icon name="clock" size={22} className="nav-ico" />
+        In Progress
       </button>
       <button
-        className={tab === 'notifications' ? 'active' : ''}
-        onClick={() => onChange('notifications')}
+        className={tab === 'dashboard' ? 'active' : ''}
+        onClick={() => onChange('dashboard')}
       >
-        <Icon name="bell" size={22} className="nav-ico" />
-        Notifications
+        <Icon name="grid" size={22} className="nav-ico" />
+        Dashboard
       </button>
       <button
         className={tab === 'profile' ? 'active' : ''}

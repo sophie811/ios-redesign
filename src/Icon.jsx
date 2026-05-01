@@ -33,6 +33,7 @@ const paths = {
   logoMark: <g transform="translate(1.5 2) scale(0.6)"><path d="M10.9639 13.272L17.0632 9.79038V0.108398L2.48242 8.43103L10.9639 13.272Z" /><path d="M33.2322 8.43103L18.6514 0.108398V9.79038L24.7507 13.272L33.2322 8.43103Z" /><path d="M17.0621 28.4536L0.712891 19.121V9.44043L17.0621 18.7717V28.4536Z" /><path d="M35.0006 9.44043L18.6514 18.7717V28.4536L35.0006 19.121V9.44043Z" /></g>,
   plus: <path d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5z" />,
   userCheck: <g fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="8" r="4" /><path d="M2 21v-1a7 7 0 0 1 12-5" /><path d="m15 17 2.5 2.5L22 15" /></g>,
+  clock: <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></g>,
 }
 
 export function Icon({ name, size = 20, className = '' }) {

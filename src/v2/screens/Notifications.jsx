@@ -1,4 +1,4 @@
-import { Icon } from '../Icon.jsx'
+import { Icon } from '../../Icon.jsx'
 
 const NOTIFICATIONS = [
   {
@@ -63,10 +63,14 @@ export function Notifications({ onBack }) {
   const newNotifs = NOTIFICATIONS.filter(n => n.unread)
   const olderNotifs = NOTIFICATIONS.filter(n => !n.unread)
   return (
-    <div className="screen has-nav">
+    <div className="screen">
       <div className="screen-header">
-        <div className="title">Notifications</div>
+        <button className="back-btn" onClick={onBack} aria-label="Back">‹</button>
         <div />
+      </div>
+
+      <div style={{ padding: '0 18px 14px' }}>
+        <div className="title" style={{ fontSize: 22 }}>Notifications</div>
       </div>
 
       {newNotifs.length > 0 && (

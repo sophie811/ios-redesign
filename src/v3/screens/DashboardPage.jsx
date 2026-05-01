@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
-import { Icon } from '../Icon.jsx'
+import { Icon } from '../../Icon.jsx'
 
 const LONG_PRESS_MS = 500
 const MOVE_CANCEL_PX = 8
@@ -11,34 +11,7 @@ const SORT_OPTIONS = [
   { key: 'views', label: 'Most Viewed' },
 ]
 
-function daysRemaining(project) {
-  if (project.status === 'processing' && project.submittedAt) {
-    const elapsed = (Date.now() - project.submittedAt) / (1000 * 60 * 60 * 24)
-    return Math.max(0, Math.ceil(3 - elapsed))
-  }
-  if (project.status === 'pro-pending' && project.scheduledDate) {
-    const target = new Date(project.scheduledDate).getTime()
-    return Math.max(0, Math.ceil((target - Date.now()) / (1000 * 60 * 60 * 24)))
-  }
-  return null
-}
-
-function statusInfo(p) {
-  if (p.status === 'processing') {
-    const days = daysRemaining(p)
-    return { label: 'Generating', sub: days != null ? `${days}d left` : null, dotClass: 'processing' }
-  }
-  if (p.status === 'pro-pending') {
-    const days = daysRemaining(p)
-    return { label: 'Pro Scheduled', sub: days != null ? `${days}d` : null, dotClass: 'scheduled' }
-  }
-  if (p.status === 'draft') {
-    return { label: 'Draft', sub: `${p.progress || 0}%`, dotClass: 'draft' }
-  }
-  return null
-}
-
-export function DashboardPage({ projects, folders, onNotifications, onNew, onAddFolder, onDeleteFolder, onRenameFolder, onAssignFolder, onOpen }) {
+export function DashboardPage({ projects, folders, onAddFolder, onDeleteFolder, onRenameFolder, onAssignFolder, onOpen }) {
   const [showNewFolder, setShowNewFolder] = useState(false)
   const [newFolderName, setNewFolderName] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(null)
@@ -139,10 +112,6 @@ export function DashboardPage({ projects, folders, onNotifications, onNew, onAdd
   }
 
   const liveProjects = projects.filter(p => p.status === 'active')
-  const inProgress = projects
-    .filter(p => p.status === 'processing' || p.status === 'pro-pending' || p.status === 'draft')
-    .slice()
-    .sort((a, b) => (b.lastActiveAt || 0) - (a.lastActiveAt || 0))
   const unfoldered = liveProjects.filter(p => !p.folder)
   const sorted = useMemo(() => {
     const list = [...unfoldered]
@@ -274,68 +243,16 @@ export function DashboardPage({ projects, folders, onNotifications, onNew, onAdd
 
   return (
     <div className="screen has-nav">
-      <div className="dash-list" style={{ marginBottom: 14, marginTop: 12 }}>
-        <button
-          type="button"
-          className="dash-row new-tour-row"
-          onClick={() => onNew && onNew()}
-        >
-          <div className="new-tour-icon"><Icon name="plus" size={20} /></div>
-          <div className="dash-info">
-            <div className="dash-name">New Tour</div>
-            <div className="dash-addr">Start a scan or book a Pro</div>
-          </div>
-        </button>
-      </div>
-
-      {inProgress.length > 0 && (
-        <>
-          <div className="section-head">
-            <span className="section-title">In Progress</span>
-          </div>
-          <div className="dash-list" style={{ marginBottom: 14 }}>
-            {inProgress.map(p => {
-              const info = statusInfo(p)
-              const useLogoPlaceholder = !p.photo && (p.status === 'pro-pending' || p.status === 'draft')
-              return (
-                <div
-                  key={p.id}
-                  className="dash-row processing-row"
-                  style={{ cursor: 'pointer', position: 'relative' }}
-                  onClick={() => onOpen && onOpen(p.id)}
-                >
-                  <div className={`dash-thumb ${p.thumb || 'img1'} ${useLogoPlaceholder ? 'logo-placeholder' : ''}`}>
-                    {p.photo ? (
-                      <img className="thumb-img" src={p.photo} alt="" loading="lazy"
-                        onError={(e) => { e.currentTarget.style.display = 'none' }} />
-                    ) : useLogoPlaceholder && (
-                      <img className="thumb-logo" src="/logo.png" alt="" />
-                    )}
-                  </div>
-                  <div className="dash-info">
-                    <div className="dash-name">{p.name}</div>
-                    <div className="dash-addr">{p.address}</div>
-                  </div>
-                  {info && (
-                    <span className="status-bubble status-bubble-thumb">{info.label}</span>
-                  )}
-                </div>
-              )
-            })}
-          </div>
-        </>
-      )}
-
-      <div className="section-head" style={{ justifyContent: 'space-between' }}>
-        <span className="section-title">All Tours</span>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+      <div className="screen-header">
+        <div className="title">Dashboard</div>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <div style={{ position: 'relative' }}>
             <button className="sort-toggle" onClick={() => setShowSort(!showSort)}>
               <Icon name="arrowDown" size={12} />
               {SORT_OPTIONS.find(o => o.key === sortBy)?.label}
             </button>
             {showSort && (
-              <div className="folder-action-menu" style={{ width: 180, right: 0, left: 'auto' }} onClick={e => e.stopPropagation()}>
+              <div className="folder-action-menu" style={{ width: 180 }} onClick={e => e.stopPropagation()}>
                 {SORT_OPTIONS.map(o => (
                   <button
                     key={o.key}
@@ -527,7 +444,9 @@ export function DashboardPage({ projects, folders, onNotifications, onNew, onAdd
           <div className="modal-dialog">
             <div className="modal-content">
               <h2>New Folder</h2>
+              <p className="lede">Organize your tours into folders.</p>
               <div className="field">
+                <label>Folder name</label>
                 <input
                   type="text"
                   placeholder="e.g. Luxury, Downtown, Q2 Listings"

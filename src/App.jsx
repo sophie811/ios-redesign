@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react'
-import { Dashboard } from './screens/Dashboard.jsx'
 import { NewProjectSheet } from './screens/NewProjectSheet.jsx'
 import { BookProForm } from './screens/BookProForm.jsx'
 import { DIYDetailsForm } from './screens/DIYDetailsForm.jsx'
@@ -40,9 +39,8 @@ export default function App() {
   )
 
   return (
-    <div className="stage">
-      <div className="phone-wrap">
-      <div className="phone">
+    <div className="phone-wrap">
+    <div className="phone">
         <div className="notch" />
         <div className="statusbar">
           <span>9:41</span>
@@ -52,28 +50,11 @@ export default function App() {
         </div>
 
         {route.name === 'home' && (
-          <Dashboard
-            projects={projects}
-            onNotifications={() => go('notifications')}
-            onNew={openSheet}
-            onOpen={(id) => {
-              const p = projects.find(x => x.id === id)
-              if (!p) return
-              if (p.status === 'processing' || p.status === 'pro-pending' || p.status === 'draft') {
-                updateProject(id, { lastActiveAt: Date.now() })
-              }
-              if (p.status === 'processing' || p.status === 'pro-pending') go('processing', { id, from: 'home' })
-              else if (p.status === 'draft') go('hub', { id, from: 'home' })
-              else go('tour', { id, from: 'home' })
-            }}
-          />
-        )}
-
-
-        {route.name === 'dashboard' && (
           <DashboardPage
             projects={projects}
             folders={folders}
+            onNotifications={() => go('notifications')}
+            onNew={openSheet}
             onAddFolder={(name) => {
               setFolders(f => [...f, { id: 'f' + Date.now(), name }])
             }}
@@ -92,9 +73,12 @@ export default function App() {
             onOpen={(id) => {
               const p = projects.find(x => x.id === id)
               if (!p) return
-              if (p.status === 'processing' || p.status === 'pro-pending') go('processing', { id, from: 'dashboard' })
-              else if (p.status === 'draft') go('hub', { id, from: 'dashboard' })
-              else go('tour', { id, from: 'dashboard' })
+              if (p.status === 'processing' || p.status === 'pro-pending' || p.status === 'draft') {
+                updateProject(id, { lastActiveAt: Date.now() })
+              }
+              if (p.status === 'processing' || p.status === 'pro-pending') go('processing', { id, from: 'home' })
+              else if (p.status === 'draft') go('hub', { id, from: 'home' })
+              else go('tour', { id, from: 'home' })
             }}
           />
         )}
@@ -105,10 +89,6 @@ export default function App() {
 
         {route.name === 'notifications' && (
           <Notifications onBack={() => go('home')} />
-        )}
-
-        {route.name === 'home' && (
-          <button className="fab" onClick={openSheet} aria-label="New project">+</button>
         )}
 
         {route.name === 'hub' && current && (
@@ -228,7 +208,7 @@ export default function App() {
           />
         )}
 
-        {(route.name === 'home' || route.name === 'dashboard' || route.name === 'profile') && (
+        {(route.name === 'home' || route.name === 'notifications' || route.name === 'profile') && (
           <BottomNav
             tab={route.name}
             onChange={(t) => go(t)}
@@ -248,8 +228,7 @@ export default function App() {
             }}
           />
         )}
-      </div>
-      </div>
+    </div>
     </div>
   )
 }
