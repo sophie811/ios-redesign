@@ -343,6 +343,10 @@ input, textarea, select { font-family: inherit; font-size: 14px; }
 }
 .statusbar .right { display: flex; gap: 6px; align-items: center; }
 
+/* ---------- Embed mode: hide inner notch/statusbar when wrapped in an outer phone frame ---------- */
+body.embed .notch,
+body.embed .statusbar { display: none; }
+
 /* ---------- Screen layout ---------- */
 .screen {
   flex: 1;
